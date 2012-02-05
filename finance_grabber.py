@@ -7,15 +7,18 @@ from pyquery import PyQuery as pq
 from raw_data import *
 
 
-class finScraper:
+class FinScraper:
     base_url = 'http://feeds2.mcgbfa.com/psgonline/financials.asp?ticker='
-
+    default_ticker = 'KIO'
     def __init__(self, symbol):
         """
         Initiate a Finance page scraper.
         symbol is the stock symbol used to search for the page, e.g. 'KIO' or 'HLM'
         """
-        self.symbol = symbol
+        if not symbol:
+            self.symbol = self.default_ticker
+        else:
+            self.symbol = symbol
         self.raw_text = ''
         self.json = {}
         self.parsed_xml = ''
@@ -38,7 +41,7 @@ class finScraper:
             parse_row.name = ''
             parse_row.values = []
             def parse_col(i,col):
-                if i==0:
+                if i == 0:
                     if not pq(col).text():
                         parse_row.name = ''
                         return
@@ -76,7 +79,7 @@ def print_dict(d):
         print '%s: %s' % (k, d[k])
 
 
-f = finScraper('KIO')
+f = FinScraper('KIO')
 KIO_json = f.parse().json
 
 
