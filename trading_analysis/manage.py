@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import os
 from django.core.management import execute_manager
 import imp
 try:
@@ -9,6 +10,11 @@ except ImportError:
     sys.exit(1)
 
 import settings
+import sys
+up_level = os.path.join(os.path.abspath(__file__),'..')
+sys.path.insert(0,up_level)
+up_level = os.path.join(up_level,'..')
+sys.path.insert(0, up_level)
 
 if __name__ == "__main__":
     execute_manager(settings)

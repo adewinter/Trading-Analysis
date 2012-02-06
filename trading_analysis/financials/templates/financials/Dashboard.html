@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Valuation of Companies</title>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/financials.css">
+</head>
+<body>
+
+{% for company, value in company_data.items %}
+    <table id="{{ company.name }}_valuation" class="valuation_table">
+        <thead>
+            <tr>
+                <td  colspan="6">{{ company.name }}</td>
+            </tr>
+            <tr>
+                <td>Year</td>
+                <td>Debt</td>
+                <td>Assets</td>
+                <td>Cash</td>
+                <td>Total Value</td>
+                <td>Share Value</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for year,v in value.items %}
+                <tr>
+                    <td>{{ year }}</td>
+                    <td>{{ v.Debt }}</td>
+                    <td>{{ v.Assets }}</td>
+                    <td>{{ v.Cash }}</td>
+                    <td>{{ v.Value }}</td>
+                    <td>{{ v.ShareVal }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endfor %}
+
+</body>
+</html>

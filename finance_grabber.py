@@ -1,4 +1,5 @@
 import json
+import os
 
 __author__ = 'adewinter'
 
@@ -10,6 +11,7 @@ from raw_data import *
 class FinScraper:
     base_url = 'http://feeds2.mcgbfa.com/psgonline/financials.asp?ticker='
     default_ticker = 'KIO'
+    backup_folder = os.path.join(os.path.abspath(__file__),'..','fin_data')
     def __init__(self, symbol):
         """
         Initiate a Finance page scraper.
@@ -27,9 +29,34 @@ class FinScraper:
         return '%s%s' % (self.base_url, self.symbol)
 
     def get_fin_text(self):
-#        r = requests.get(self._get_page_url())
-#        self.raw_text = r.text
-        self.raw_text = KIO_STRING
+        """
+        Downloads the financial data: making it available to the object and saving a backup to disk
+        """
+        #test if we already have a cached copy
+        path = os.path.join(self.backup_folder,'%s_financial_data.html' % self.symbol)
+        self.raw_text = ''
+        try:
+            f = file(path,'r')
+
+            for line in f:
+                self.raw_text += line
+            f.close()
+        except IOError as e:
+            print 'No cached copy file found.'
+            
+        if not self.raw_text:
+            print 'No cached copy of %s found. Pulling from online data...' % self.symbol
+            r = requests.get(self._get_page_url())
+            self.raw_text = r.text
+        else:
+            print 'cached copy of %s found, using that instead!' % self.symbol
+        # Save the raw text
+
+        print 'Saving backup copy of fin data to: %s' % path
+        f = file(path,'w')
+        f.write(self.raw_text)
+        f.close()
+#        self.raw_text = KIO_STRING
         return self.raw_text
 
     def set_ticker(self, symbol):
@@ -55,13 +82,17 @@ class FinScraper:
             r = pq(row)
             r.children('td').each(parse_col)
             row_dict = {parse_row.name: parse_row.values}
-            self.json.update(row_dict);
+            self.json.update(row_dict)
 
-        self.parsed_xml = pq(f.raw_text)
+        self.parsed_xml = pq(self.raw_text)
         self.parsed_xml.find('tr').each(parse_row)
-
+        body_len = self.parsed_xml.find('html>body>form>a:eq(1)').find('table:eq(0)').children().length
+        if not body_len:
+            self.has_data = False
+        else:
+            self.has_data = True
+        
         print 'Done parsing!'
-        print 'Dict: %s' % print_dict(self.json)
         
 
                           
@@ -78,9 +109,9 @@ def print_dict(d):
     for k in d.keys():
         print '%s: %s' % (k, d[k])
 
-
-f = FinScraper('KIO')
-KIO_json = f.parse().json
+#
+#f = FinScraper('KIO')
+#KIO_json = f.parse().json
 
 
 
