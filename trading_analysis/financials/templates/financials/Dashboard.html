@@ -3,33 +3,35 @@
 
 
 {% block body %}
+    <div class="container">
 {% for company, value in company_data.items %}
-    <table id="{{ company.name }}_valuation" class="valuation_table">
-        <thead>
-            <tr>
-                <td  colspan="6">{{ company.name }}</td>
-            </tr>
-            <tr>
-                <td>Year</td>
-                <td>Debt</td>
-                <td>Assets</td>
-                <td>Cash</td>
-                <td>Total Value</td>
-                <td>Share Value</td>
-            </tr>
-        </thead>
-        <tbody>
-            {% for year,v in value.items %}
+    <div class="module">
+    <h1>[{{ company.ticker_symbol }}] - {{ company.name }}</h1>
+        <table id="{{ company.name }}_valuation" class="valuation_table table table-striped table-bordered">
+            <thead>
                 <tr>
-                    <td>{{ year }}</td>
-                    <td>{{ v.Debt }}</td>
-                    <td>{{ v.Assets }}</td>
-                    <td>{{ v.Cash }}</td>
-                    <td>{{ v.Value }}</td>
-                    <td>{{ v.ShareVal }}</td>
+                    <td>Year</td>
+                    <td>Debt</td>
+                    <td>Assets</td>
+                    <td>Cash</td>
+                    <td>Total Value</td>
+                    <td>Share Value</td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for year,v in value.items %}
+                    <tr>
+                        <td>{{ year }}</td>
+                        <td>{{ v.Debt|intcomma }}</td>
+                        <td>{{ v.Assets|intcomma }}</td>
+                        <td>{{ v.Cash|intcomma }}</td>
+                        <td>{{ v.Value|intcomma }}</td>
+                        <td>{{ v.ShareVal }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endfor %}
+    </div>
 {% endblock %}

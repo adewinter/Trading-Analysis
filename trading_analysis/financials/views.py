@@ -36,7 +36,7 @@ def dashboard(request):
         try:
             years = StatementItem.objects.filter(slug="Year", company=company)
             for year in years:
-                y = year.value
+                y = year.value.replace('y_','')
                 asset = StatementItem.objects.get(slug='Total Assets', company=company, year=y).value
                 asset = convertToInt(asset)*1000
                 deb = StatementItem.objects.get(slug='Total Liabilities', company=company, year=y).value
