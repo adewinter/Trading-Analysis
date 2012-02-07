@@ -38,15 +38,15 @@ def dashboard(request):
             for year in years:
                 y = year.value
                 asset = StatementItem.objects.get(slug='Total Assets', company=company, year=y).value
-                asset = convertToInt(asset)
+                asset = convertToInt(asset)*1000
                 deb = StatementItem.objects.get(slug='Total Liabilities', company=company, year=y).value
-                deb = convertToInt(deb)
+                deb = convertToInt(deb)*1000
                 cash = StatementItem.objects.get(slug='Cash Ex Operations', company=company, year=y).value
-                cash = convertToInt(cash)
+                cash = convertToInt(cash)*1000
                 shares = StatementItem.objects.get(slug__icontains='Nr of Ordinary Shares in Issue', company=company, year=y).value
-                shares = convertToInt(shares)
-                value = (asset + cash)/deb
-                share_val = value/shares
+                shares = convertToInt(shares)*1000
+                value = (asset + cash - deb)
+                share_val = value/(shares*1.0)
 
                 y_context = {
                     "Cash" : cash,
