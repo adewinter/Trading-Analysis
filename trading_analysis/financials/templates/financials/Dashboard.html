@@ -1,36 +1,86 @@
 {% extends "financials/base.html" %}
 {% load humanize %}
+{% load currency_extras %}
+
+{% block scripts %}
+    {{ block.super }}
+<script type="text/javascript">
+$(document).ready(function () {
+
+    //addFlotDataPoint(x,y,series,company)
+    {% for company, value in company_data.items %}
+        {% for year in value %}
+            addFlotDataPoint(new Date({{ year.0 }},{{ year.1.YearEnd }}) ,"{{ year.1.ShareVal|currency_rand_without_symbol }}", 'Estimated Value', "{{ company.ticker_symbol }}");
+            addFlotDataPoint(new Date({{ year.0 }},6),"{{ year.1.AvgPrice|currency_rand_without_symbol }}", 'Average Market Price', "{{ company.ticker_symbol }}");
+        {% endfor %}
+        {% for dtp in company.marketData %}
+                        addFlotDataPoint({{ dtp.date|epoch }}, {{ dtp.Close }}, "Closing Price", "{{ company.ticker_symbol }}")
+        {% endfor %}
+    {% endfor %}
 
 
+
+    plot_charts();
+});
+
+
+
+</script>
+{% endblock %}
 {% block body %}
     <div class="container">
+    <div class="module tools">
+        <button id="under_valued_only">Show Undervalued Companies Only</button>
+    </div>
+    
+    
 {% for company, value in company_data.items %}
-    <div class="module">
+    <div class="module stock_info" id="{{ company.ticker_symbol }}">
     <h1>[{{ company.ticker_symbol }}] - {{ company.name }}</h1>
-        <table id="{{ company.name }}_valuation" class="valuation_table table table-striped table-bordered">
+        <table id="{{ company.ticker_symbol }}_valuation" class="valuation_table table table-striped table-bordered">
             <thead>
                 <tr>
-                    <td>Year</td>
-                    <td>Debt</td>
-                    <td>Assets</td>
-                    <td>Cash</td>
-                    <td>Total Value</td>
+                    <td>Year (ZAR)</td>
+                    <td>Debt (ZAR)</td>
+                    <td>Assets (ZAR)</td>
+                    <td>Cash (ZAR)</td>
+                    <td>Total Value (ZAR)</td>
+                    <td>Dividends Per Share</td>
+                    <td>Shares Outstanding</td>
                     <td>Share Value</td>
+                    <td>Average Price</td>
+                    <td>Value - Price Delta</td>
                 </tr>
             </thead>
             <tbody>
-                {% for year,v in value.items %}
+                {% for valItem in value %}
                     <tr>
-                        <td>{{ year }}</td>
-                        <td>{{ v.Debt|intcomma }}</td>
-                        <td>{{ v.Assets|intcomma }}</td>
-                        <td>{{ v.Cash|intcomma }}</td>
-                        <td>{{ v.Value|intcomma }}</td>
-                        <td>{{ v.ShareVal }}</td>
+                        <td>{{ valItem.0 }}</td>
+                        <td>{{ valItem.1.Debt|currency_rand_round }}</td>
+                        <td>{{ valItem.1.Assets|currency_rand_round }}</td>
+                        <td>{{ valItem.1.Cash|currency_rand_round }}</td>
+                        <td>{{ valItem.1.Value|currency_rand_round }}</td>
+                        <td>{{ valItem.1.DPS|currency_rand }}</td>
+                        <td>{{ valItem.1.SharesOutstanding }}</td>
+                        <td>{{ valItem.1.ShareVal|currency_rand }}</td>
+                        <td>{{ valItem.1.AvgPrice|currency_rand }}</td>
+                        <td>{{ valItem.1.Delta|currency_rand }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+
+	
+        <div id="{{ company.ticker_symbol }}_flot" class="value_chart" style="width:940px;height:300px">
+
+        </div>
+	<div id="{{ company.ticker_symbol }}_tools" class="company_tools">
+		Avg Price 2012: {{ company.avgpricethisyear }}<br />
+		<a href="http://feeds2.mcgbfa.com/psgonline/financials.asp?ticker={{ company.ticker_symbol }}">Link to Financial Statement</a><br />
+		<a href="http://www.fin24.com/Products/CompanySnapshot/?ticker={{ company.ticker_symbol }}">Link to Fin24</a><br />
+	</div>
+	<div id="{{ company.ticker_symbol }}_report_div" class="report_div"></div>
+
     </div>
 {% endfor %}
     </div>

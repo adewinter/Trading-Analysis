@@ -27,6 +27,25 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('financials', ['StatementItem'])
 
+        # Adding model 'MarketDataPoint'
+        db.create_table('financials_marketdatapoint', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('company', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['financials.Company'])),
+            ('AfrikaansInstrumentName', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('Change', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('Close', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('date', self.gf('django.db.models.fields.DateField')()),
+            ('High', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('InstrumentIdentifier', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('InstrumentName', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('Low', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('Movement', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('Open', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('PercentageChange', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('Volume', self.gf('django.db.models.fields.CharField')(max_length=100)),
+        ))
+        db.send_create_signal('financials', ['MarketDataPoint'])
+
 
     def backwards(self, orm):
         
@@ -36,6 +55,9 @@ class Migration(SchemaMigration):
         # Deleting model 'StatementItem'
         db.delete_table('financials_statementitem')
 
+        # Deleting model 'MarketDataPoint'
+        db.delete_table('financials_marketdatapoint')
+
 
     models = {
         'financials.company': {
@@ -44,6 +66,23 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'ticker_symbol': ('django.db.models.fields.CharField', [], {'max_length': '10'})
+        },
+        'financials.marketdatapoint': {
+            'AfrikaansInstrumentName': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'Change': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'Close': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'High': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'InstrumentIdentifier': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'InstrumentName': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'Low': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'Meta': {'object_name': 'MarketDataPoint'},
+            'Movement': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'Open': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'PercentageChange': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'Volume': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'company': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['financials.Company']"}),
+            'date': ('django.db.models.fields.DateField', [], {}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
         'financials.statementitem': {
             'Meta': {'object_name': 'StatementItem'},

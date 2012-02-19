@@ -7,6 +7,8 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'trading_analysis.financials.views.dashboard', name='home'),
+    url(r'^interesting/$', 'trading_analysis.financials.views.interesting_companies', name='home'),
+    url(r'^report/$', 'trading_analysis.financials.views.get_financial_report', name='fin_report'),
     # url(r'^trading_analysis/', include('trading_analysis.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

@@ -2,3 +2,5 @@
 *.pyc
 *.sqlite3
 projectBackupFiles/
+market_data/*
+fin_data/*

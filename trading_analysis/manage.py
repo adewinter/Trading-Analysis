@@ -11,10 +11,14 @@ except ImportError:
 
 import settings
 import sys
-up_level = os.path.join(os.path.abspath(__file__),'..')
+print 'INSERTING THE FOLLOWING INTO PYTHONPATH'
+up_level = os.path.split(os.path.abspath(__file__))[0]
+print up_level
 sys.path.insert(0,up_level)
-up_level = os.path.join(up_level,'..')
+up_level = os.path.split(up_level)[0]
+print up_level
 sys.path.insert(0, up_level)
+
 
 if __name__ == "__main__":
     execute_manager(settings)

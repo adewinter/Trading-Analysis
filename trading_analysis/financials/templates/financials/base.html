@@ -13,9 +13,10 @@
     {% block scripts %}
         <script src="{{ STATIC_URL }}js/jquery.1.7.1.min.js"></script>
         <script src="{{ STATIC_URL }}js/jquery-ui-1.8.16.custom.min.js"></script>
-{#        <script src="{{ STATIC_URL }}js/excanvas.min.js"></script>#}
-{#        <script src="{{ STATIC_URL }}js/jquery.flot.js"></script>#}
+        <script src="{{ STATIC_URL }}js/jquery.flot.js"></script>
+        <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/excanvas.min.js"></script><![endif]-->
         <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+        <script src="{{ STATIC_URL }}js/financials.js"></script>
     {% endblock %}
     {% endblock %}
 </head>
